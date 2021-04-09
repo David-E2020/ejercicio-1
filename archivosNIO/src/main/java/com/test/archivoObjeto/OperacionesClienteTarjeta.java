@@ -38,11 +38,11 @@ public class OperacionesClienteTarjeta {
         Cliente cliente=new Cliente();
         TarjetaDebito tarjeta=new TarjetaDebito();
         System.out.println("Digite nombre");
-        cliente.setNombre(leer.nextLine());
+        cliente.setNombre(leer.next());
         System.out.println("Digite apellido paterno");
-        cliente.setPaterno(leer.nextLine());
+        cliente.setPaterno(leer.next());
         System.out.println("Digite apellido materno");
-        cliente.setMaterno(leer.nextLine());
+        cliente.setMaterno(leer.next());
         System.out.println("Digite el nro. de cedula");
         cliente.setCedula(leer.nextInt());
         //llenando los datos de la tarjeta
@@ -107,10 +107,39 @@ public class OperacionesClienteTarjeta {
             }
         }
     }
-    
+    //realizando el retiro de un monto de dinero a la cuenta
+    public void retirar(int cedula,double monto){
+        int sw=0;
+        if(listaCliente!=null){
+            for(Cliente cliente:listaCliente){
+                if(cliente.getCedula()==cedula){
+                    sw=1;
+                    if(cliente.getTarjeta().getEstado().equals("ACTIVO")){
+                        double saldo=cliente.getTarjeta().getSaldo();
+                        if(saldo>=monto){
+                            saldo=saldo-monto;
+                            cliente.getTarjeta().setSaldo(saldo);
+                            System.out.println("Se realizo el retiro");
+                        }else{
+                            System.out.println("Usted no cuenta con saldo suficiente");
+                            System.out.println("***Retiro no realizado***");
+                        }
+                        
+                    }else{
+                        System.out.println("La tarjeta esta bloquedo");
+                        System.out.println("Comuniquese con el Banco!");
+                    }
+                }
+            }
+            if(sw==0){
+                System.out.println("El cliente no esta registrado");
+            }
+        }
+    }
+
     //CREANDO UN ARCHIVO
     public void crearArchivo(){
-        Path path=Paths.get("E:\\programacionIII\\archivoCliente.txt");
+        Path path=Paths.get("D:\\SISTEMAS_INFORMATICOS_3_AÑO\\PROGRAMACION_III\\1-bimestre\\Persistencia de Objetos - Archivos\\ejercicio-1\\archivoCliente.txt");
         try {
             if(!Files.exists(path)){
                 Files.createFile(path);
@@ -123,7 +152,7 @@ public class OperacionesClienteTarjeta {
     }
     //guardando la listacliente dentro del archivo creado con anterioridad
     public void guardarObjetos(){
-        String ruta="E:\\programacionIII\\archivoCliente.txt";
+        String ruta="D:\\SISTEMAS_INFORMATICOS_3_AÑO\\PROGRAMACION_III\\1-bimestre\\Persistencia de Objetos - Archivos\\ejercicio-1\\archivoCliente.txt";
         try {
             FileOutputStream archivo=new FileOutputStream(ruta);
             ObjectOutputStream oos=new ObjectOutputStream(archivo);
@@ -139,7 +168,7 @@ public class OperacionesClienteTarjeta {
     }
     //cargamos los datos del archivo a un list<Cliente>
     public void leerClientes(){
-        String ruta="E:\\programacionIII\\archivoCliente.txt";
+        String ruta="D:\\SISTEMAS_INFORMATICOS_3_AÑO\\PROGRAMACION_III\\1-bimestre\\Persistencia de Objetos - Archivos\\ejercicio-1\\archivoCliente.txt";
         try {
             FileInputStream archivo=new FileInputStream(ruta);
             ObjectInputStream ois=new ObjectInputStream(archivo);
